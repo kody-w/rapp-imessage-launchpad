@@ -101,6 +101,9 @@ quiet_hours: {start, end} | false}`. Failure to resolve a local IANA zone is
 explicit and fail-closed; configure an available named zone such as UTC.
 The SDK also accepts the canonical hours object or `false`/`null` on policy
 input and normalizes it to the native display form when saved.
+The `"off"` alias also disables quiet hours. Optional positive finite
+`urgent_hours` and `time_sensitive_hours` pass through unchanged, preserving
+the canonical ordering constraint and defaults of 2 and 24 hours.
 
 It lives once in `HOME/state/launchpad/policy.json`, under the same producer
 lock and receipt chain used by every Launchpad configuration bound to that

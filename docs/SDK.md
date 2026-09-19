@@ -103,6 +103,9 @@ The native policy presentation includes `quiet_hours.enabled` and can say
 `timezone: "local"`. The adapter translates these to the canonical gate's
 `quiet_hours: {start, end} | false` and a real IANA timezone. It does not add
 another policy decision layer or guess a local UTC offset.
+Canonical `quiet_hours: "off"` is also accepted. Optional positive finite
+`urgent_hours` and `time_sensitive_hours` pass through to that same gate, with
+the urgent window no larger than the time-sensitive window.
 
 Optional `interrupt.render(proposal)` is also called in an isolated worker.
 Its exact validated text is submitted; the SDK does not replace it with a

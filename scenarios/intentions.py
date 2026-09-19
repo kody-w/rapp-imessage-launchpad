@@ -317,8 +317,8 @@ def _rank(item, now):
                           6 if until <= timedelta(days=7) else
                           3 if until <= timedelta(days=30) else 0)
     urgency = "routine"
-    if until is not None and until <= timedelta(days=7):
-        urgency = ("urgent" if consequence == 30 and until <= timedelta(days=1)
+    if until is not None and timedelta(0) <= until <= timedelta(hours=24):
+        urgency = ("urgent" if consequence == 30 and until <= timedelta(hours=2)
                    else "time_sensitive")
     return {
         "score": consequence + relevance + deadline_score,
@@ -384,7 +384,7 @@ def _envelope(status, reason, evidence, ranked=()):
         )
         if "deadline" in best:
             result["deadline"] = best["deadline"]
-        semantics.update(ranked=[_semantic(item) for item in ranked], urgency=best["urgency"])
+        semantics.update(ranked=[_semantic(item) for item in ranked])
     else:
         semantics["reason"] = reason
     result["fingerprint"] = "intentions:" + _digest(semantics)

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import math
 from datetime import timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -18,12 +19,13 @@ DEFAULT_POLICY = {
 
 
 def validate_policy(value):
-    if not isinstance(value, dict) or set(value) != set(DEFAULT_POLICY):
-        raise ConfigurationError("policy requires exactly max_daily, quiet_hours, and timezone")
+    optional = {"urgent_hours", "time_sensitive_hours"}
+    if not isinstance(value, dict) or not set(DEFAULT_POLICY) <= set(value) or set(value) - set(DEFAULT_POLICY) - optional:
+        raise ConfigurationError("policy requires max_daily, quiet_hours, timezone, and only supported urgency windows")
     if type(value["max_daily"]) is not int or not 1 <= value["max_daily"] <= 10:
         raise ConfigurationError("max_daily must be 1–10 (default 6)")
     quiet = value["quiet_hours"]
-    if quiet is False or quiet is None:
+    if quiet is False or quiet is None or quiet == "off":
         quiet = {"enabled": False, "start": "22:00", "end": "08:00"}
     elif isinstance(quiet, dict) and set(quiet) == {"start", "end"}:
         quiet = dict(quiet, enabled=True)
@@ -49,8 +51,18 @@ def validate_policy(value):
             ZoneInfo(zone)
         except (ZoneInfoNotFoundError, ValueError):
             raise ConfigurationError("timezone is unavailable on this Python installation") from None
+    windows = {}
+    for key, default in (("urgent_hours", 2), ("time_sensitive_hours", 24)):
+        window = value.get(key, default)
+        if type(window) not in (int, float) or not math.isfinite(window) or window <= 0:
+            raise ConfigurationError("urgency windows must be positive finite hours")
+        if key in value:
+            windows[key] = window
+    if value.get("urgent_hours", 2) > value.get("time_sensitive_hours", 24):
+        raise ConfigurationError("urgent_hours must not exceed time_sensitive_hours")
     return {
         "max_daily": value["max_daily"], "quiet_hours": dict(quiet), "timezone": zone,
+        **windows,
     }
 
 
@@ -81,6 +93,7 @@ def canonical_policy(value):
         "max_daily": value["max_daily"],
         "timezone": _local_zone_name() if value["timezone"] == "local" else value["timezone"],
         "quiet_hours": {"start": quiet["start"], "end": quiet["end"]} if quiet["enabled"] else False,
+        **{key: value[key] for key in ("urgent_hours", "time_sensitive_hours") if key in value},
     }
 
 
@@ -155,4 +168,6 @@ def render(proposal):
         ascii_text(item["source"]) + ": " + ascii_text(item["observation"])
         for item in proposal["evidence"]
     )
+    if "deadline" in proposal:
+        pieces.append("Deadline: " + ascii_text(proposal["deadline"]))
     return validate_message("\n".join(pieces))

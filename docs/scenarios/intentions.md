@@ -193,8 +193,9 @@ sum, then by consequence, earlier deadline, and canonical ID. Return only the
 best three and draft only the first; report both scores and original evidence.
 
 Urgency comes only from the selected promise's recorded deadline: `urgent` for
-high consequence due within 24 hours or overdue; otherwise `time_sensitive`
-within seven days or overdue; otherwise `routine`. Age alone is never urgency.
+high consequence due within the next two hours; otherwise `time_sensitive`
+within the next 24 hours; otherwise `routine`. Overdue dates do not establish
+active harm. Age alone is never urgency.
 
 The envelope has `scenario="intentions"`, `status`, `title`, `change`, `impact`,
 `action`, `decision`, `evidence` (`source`/`observation` pairs), `artifacts`,
@@ -234,9 +235,10 @@ in the output directory.
 The semantic SHA-256 fingerprint excludes evaluation/export/relevance-check
 timestamps, source positions/paths, artifact paths, score drift and input order.
 It includes ranked canonical IDs, promise words, actionable details, stated
-consequence/relevance, deadline and selected urgency. Equivalent whitespace
-and timezone offsets do not create a new intention; materially changed work or
-urgency does. Freshness/eligibility and rank changes can change the result.
+consequence/relevance and deadline, not the clock-derived urgency label.
+Equivalent whitespace, timezone offsets, and approaching the same deadline
+do not create a new intention. Material work, eligibility, or rank changes can
+change the result.
 
 ## Public protocol integration and device onboarding
 

@@ -10,10 +10,26 @@ from test_launchpad import PrivateCase, NOW, proposal
 from rapp_launchpad import Launchpad
 from rapp_launchpad.config import canonical_source, package_scenarios
 from rapp_launchpad.transport import CanonicalTransport
+from rapp_launchpad.gate import canonical_policy, render, validate_policy
+from rapp_launchpad.errors import ConfigurationError
 from rapp_launchpad.util import atomic_json
 
 
 class RegisteredScenarioIntegration(PrivateCase):
+    def test_canonical_policy_options_and_fallback_deadline_are_preserved(self):
+        policy = {"max_daily": 6, "timezone": "UTC", "quiet_hours": "off",
+                  "urgent_hours": 1.5, "time_sensitive_hours": 18}
+        normalized = canonical_policy(policy)
+        self.assertIs(normalized["quiet_hours"], False)
+        self.assertEqual(normalized["urgent_hours"], 1.5)
+        self.assertEqual(normalized["time_sensitive_hours"], 18)
+        for changed in ({"urgent_hours": 19}, {"urgent_hours": float("nan")},
+                        {"time_sensitive_hours": False}):
+            with self.assertRaises(ConfigurationError):
+                validate_policy(dict(policy, **changed))
+        deadline = "2030-05-14T18:00:00Z"
+        self.assertIn("Deadline: " + deadline, render(dict(proposal(), deadline=deadline)))
+
     def test_all_ten_real_modules_build_without_dependency_or_protocol_errors(self):
         config = json.loads(self.path.read_text())
         config["scenario_root"] = str(package_scenarios())

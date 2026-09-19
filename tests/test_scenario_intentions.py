@@ -127,7 +127,7 @@ class IntentionsTests(unittest.TestCase):
     def test_ready_drafts_concrete_outline_with_original_context_citations(self):
         result = self.build([promise()])
         self.assert_envelope(result, "ready")
-        self.assertEqual("urgent", result["urgency"])
+        self.assertEqual("time_sensitive", result["urgency"])
         self.assertEqual("2026-09-20T12:00:00Z", result["deadline"])
         self.assertEqual(2, len(result["artifacts"]))
         draft = Path(result["artifacts"][1]).read_text(encoding="utf-8")
@@ -436,7 +436,7 @@ class IntentionsTests(unittest.TestCase):
         for level, deadline, urgency in (
             ("high", None, "routine"),
             ("high", "2026-10-20T12:00:00Z", "routine"),
-            ("high", "2026-09-23T12:00:00Z", "time_sensitive"),
+            ("high", "2026-09-23T12:00:00Z", "routine"),
             ("medium", "2026-09-19T19:00:00Z", "time_sensitive"),
             ("high", "2026-09-19T19:00:00Z", "urgent"),
         ):
@@ -463,7 +463,7 @@ class IntentionsTests(unittest.TestCase):
         moved = self.build()
         self.assertEqual(first["fingerprint"], moved["fingerprint"])
 
-    def test_semantic_changes_and_deadline_urgency_boundary_change_fingerprint(self):
+    def test_semantic_changes_but_not_deadline_urgency_boundary_change_fingerprint(self):
         item = promise(deadline="2026-09-21T19:00:00Z")
         first = self.build([item])
         item["consequence"]["reason"] = "A different verified consequence."
@@ -472,7 +472,22 @@ class IntentionsTests(unittest.TestCase):
         self.context["now"] = "2026-09-21T18:30:00Z"
         boundary = self.build([item])
         self.assertEqual("urgent", boundary["urgency"])
-        self.assertNotEqual(changed["fingerprint"], boundary["fingerprint"])
+        self.assertEqual(changed["fingerprint"], boundary["fingerprint"])
+
+    def test_recorded_deadline_at_16_81_hours_passes_gate_without_clock_only_requeue(self):
+        from scenarios.interrupt import evaluate
+        self.context["now"] = "2026-09-19T19:11:24Z"
+        first = self.build([promise()])
+        policy = {"quiet_hours": False, "timezone": "UTC"}
+        self.assertEqual(first["urgency"], "time_sensitive")
+        self.assertTrue(evaluate(first, [], self.context["now"], policy)["allow"])
+        history = [{"at": self.context["now"], "scenario": "intentions",
+                    "fingerprint": first["fingerprint"], "decision": "queued", "proposal": first}]
+        self.context["now"] = "2026-09-20T11:00:00Z"
+        later = self.build()
+        self.assertEqual(later["urgency"], "urgent")
+        self.assertEqual(first["fingerprint"], later["fingerprint"])
+        self.assertFalse(evaluate(later, history, self.context["now"], policy)["allow"])
 
     def test_timezone_equivalent_dates_and_whitespace_have_stable_fingerprints(self):
         item = promise()

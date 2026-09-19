@@ -1,6 +1,6 @@
 {
   "name": "rapp-imessage-launchpad",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An evidence-first mission control for one canonical iMessage pipeline.",
   "private": true,
   "license": "MIT",
@@ -40,22 +40,48 @@
       {
         "from": "rapp_launchpad",
         "to": "python/rapp_launchpad",
-        "filter": ["**/*", "!**/__pycache__/**", "!**/*.pyc"]
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**",
+          "!**/*.pyc"
+        ]
       },
       {
         "from": "scenarios",
         "to": "python/scenarios",
-        "filter": ["**/*", "!**/__pycache__/**", "!**/*.pyc"]
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**",
+          "!**/*.pyc"
+        ]
       },
-      {"from": "protocol", "to": "protocol"},
-      {"from": "docs", "to": "docs"}
+      {
+        "from": "protocol",
+        "to": "protocol"
+      },
+      {
+        "from": "docs",
+        "to": "docs"
+      }
     ],
-    "electronLanguages": ["en"],
+    "electronLanguages": [
+      "en"
+    ],
     "mac": {
       "category": "public.app-category.utilities",
       "target": [
-        {"target": "dmg", "arch": ["arm64"]},
-        {"target": "zip", "arch": ["arm64"]}
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64"
+          ]
+        }
       ],
       "icon": "build/icon.icns",
       "identity": null,
@@ -69,10 +95,21 @@
     "dmg": {
       "title": "RAPP iMessage Launchpad",
       "contents": [
-        {"x": 160, "y": 180},
-        {"x": 440, "y": 180, "type": "link", "path": "/Applications"}
+        {
+          "x": 160,
+          "y": 180
+        },
+        {
+          "x": 440,
+          "y": 180,
+          "type": "link",
+          "path": "/Applications"
+        }
       ],
-      "window": {"width": 600, "height": 380}
+      "window": {
+        "width": 600,
+        "height": 380
+      }
     },
     "artifactName": "RAPP-iMessage-Launchpad-${version}-${arch}.${ext}"
   }

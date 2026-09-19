@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rapp-imessage-launchpad"
+version = "1.0.0"
+description = "One evidence-first protocol, SDK, and canonical iMessage outbox."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "RAPP iMessage Launchpad contributors"}]
+dependencies = []
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3",
+  "Operating System :: MacOS",
+  "License :: OSI Approved :: MIT License",
+]
+
+[project.scripts]
+rapp-launchpad = "rapp_launchpad.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rapp_launchpad*", "scenarios*"]
+
+[tool.setuptools.package-data]
+"rapp_launchpad._vendor" = ["LICENSE", "provenance.json"]

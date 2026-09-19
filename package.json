@@ -1,0 +1,79 @@
+{
+  "name": "rapp-imessage-launchpad",
+  "version": "1.0.0",
+  "description": "An evidence-first mission control for one canonical iMessage pipeline.",
+  "private": true,
+  "license": "MIT",
+  "author": "RAPP iMessage Launchpad contributors",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/js/*.test.cjs",
+    "test:python": "python3 -m unittest discover -s tests/python -v",
+    "lint": "node scripts/check.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "build": "npm run icons && electron-builder --mac zip --arm64 --publish never",
+    "dist:mac": "npm run icons && electron-builder --mac dmg zip --universal --publish never"
+  },
+  "devDependencies": {
+    "electron": "44.4.3",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.rapp.imessage-launchpad",
+    "productName": "RAPP iMessage Launchpad",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "assets/**/*",
+      "package.json",
+      "LICENSE",
+      "NOTICE.md"
+    ],
+    "extraResources": [
+      {
+        "from": "rapp_launchpad",
+        "to": "python/rapp_launchpad",
+        "filter": ["**/*", "!**/__pycache__/**", "!**/*.pyc"]
+      },
+      {
+        "from": "scenarios",
+        "to": "python/scenarios",
+        "filter": ["**/*", "!**/__pycache__/**", "!**/*.pyc"]
+      },
+      {"from": "protocol", "to": "protocol"},
+      {"from": "docs", "to": "docs"}
+    ],
+    "electronLanguages": ["en"],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        {"target": "dmg", "arch": ["arm64"]},
+        {"target": "zip", "arch": ["arm64"]}
+      ],
+      "icon": "build/icon.icns",
+      "identity": null,
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "Launchpad uses the canonical outbox to send only messages you explicitly authorize through Messages."
+      }
+    },
+    "dmg": {
+      "title": "RAPP iMessage Launchpad",
+      "contents": [
+        {"x": 160, "y": 180},
+        {"x": 440, "y": 180, "type": "link", "path": "/Applications"}
+      ],
+      "window": {"width": 600, "height": 380}
+    },
+    "artifactName": "RAPP-iMessage-Launchpad-${version}-${arch}.${ext}"
+  }
+}

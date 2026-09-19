@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rapp-imessage-launchpad:receipt:1.0",
+  "title": "Launchpad local receipt payload 1.0",
+  "type": "object",
+  "required": ["schema", "id", "event_id", "at", "observed_at", "state", "scenario", "fingerprint", "decision", "reason", "proposal"],
+  "properties": {
+    "schema": {"const": "rapp-imessage-launchpad/receipt/1.0"},
+    "id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "event_id": {"type": "string", "pattern": "^[a-f0-9]{32}$"},
+    "at": {"type": "string", "format": "date-time"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "state": {"enum": ["dry_run", "intent", "queued", "sent_unverified", "unknown", "delivered", "user_confirmed", "suppressed", "error"]},
+    "scenario": {"type": "string"},
+    "fingerprint": {"type": "string"},
+    "decision": {"enum": ["queued", "suppressed", "error", null]},
+    "reason": {"type": "string"},
+    "proposal": {"type": ["object", "null"]},
+    "dedupe_key": {"type": ["string", "null"]},
+    "transport": {"type": "object"},
+    "would_queue": {"type": "boolean"},
+    "dry_run": {"type": "boolean"},
+    "message_preview": {"type": "string", "maxLength": 650},
+    "confirmed_by": {"const": "explicit-local-user"},
+    "error_code": {"type": "string"}
+  },
+  "additionalProperties": false
+}

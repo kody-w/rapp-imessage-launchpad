@@ -1,0 +1,15 @@
+{
+  "schema": "rapp-imessage-launchpad/proposal/1.0",
+  "scenario": "future",
+  "status": "blocked",
+  "title": "Synthetic contract example — not a real finding",
+  "change": "This example only demonstrates the versioned proposal structure.",
+  "impact": "No user evidence was inspected.",
+  "action": "Configure a real source and write an evidence-backed producer before enabling sends.",
+  "decision": "Remain blocked; never submit a demonstration fixture as a real finding.",
+  "evidence": [],
+  "artifacts": [],
+  "fingerprint": "synthetic-contract-example-v1",
+  "urgency": "routine",
+  "reason": "Synthetic example is deliberately unsendable."
+}

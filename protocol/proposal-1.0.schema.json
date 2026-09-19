@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rapp-imessage-launchpad:proposal:1.0",
+  "title": "RAPP iMessage Launchpad proposal 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "scenario", "status", "title", "change", "impact", "action", "decision", "evidence", "artifacts", "fingerprint", "urgency", "reason"],
+  "properties": {
+    "schema": {"const": "rapp-imessage-launchpad/proposal/1.0"},
+    "scenario": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+    "status": {"enum": ["ready", "suppressed", "blocked"]},
+    "title": {"type": "string", "maxLength": 200},
+    "change": {"type": "string", "maxLength": 4096},
+    "impact": {"type": "string", "maxLength": 4096},
+    "action": {"type": "string", "maxLength": 4096},
+    "decision": {"type": "string", "maxLength": 4096},
+    "reason": {"type": "string", "minLength": 1, "maxLength": 4096},
+    "fingerprint": {"type": "string", "minLength": 1, "maxLength": 512},
+    "urgency": {"enum": ["routine", "time_sensitive", "urgent"]},
+    "deadline": {"type": "string", "format": "date-time", "maxLength": 40},
+    "evidence": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "observation"],
+        "properties": {
+          "source": {"type": "string", "minLength": 1, "maxLength": 4096},
+          "observation": {"type": "string", "minLength": 1, "maxLength": 4096}
+        }
+      }
+    },
+    "artifacts": {"type": "array", "maxItems": 32, "items": {"type": "string", "minLength": 1, "maxLength": 4096}},
+    "assessments": {"type": "array", "maxItems": 50, "items": {"type": "object"}}
+  },
+  "allOf": [{
+    "if": {"properties": {"status": {"const": "ready"}}},
+    "then": {
+      "properties": {
+        "title": {"minLength": 1},
+        "change": {"minLength": 1},
+        "impact": {"minLength": 1},
+        "action": {"minLength": 1},
+        "decision": {"minLength": 1},
+        "evidence": {"minItems": 1}
+      }
+    }
+  }, {
+    "if": {"required": ["assessments"]},
+    "then": {"properties": {"scenario": {"const": "interrupt"}}}
+  }]
+}

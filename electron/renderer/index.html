@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'">
+  <title>RAPP iMessage Launchpad</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/renderer.js" defer></script>
+</head>
+<body>
+  <div class="titlebar" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <div class="brand"><img src="/icon.svg" alt="" width="42" height="42"><div><strong>RAPP</strong><span>iMessage Launchpad</span></div></div>
+    <div class="sidebar-label">WORKSPACE</div>
+    <nav aria-label="Main navigation">
+      <button class="nav-item selected" data-tab="mission" aria-selected="true"><span class="nav-icon">◈</span>Mission control</button>
+      <button class="nav-item" data-tab="onboarding" aria-selected="false"><span class="nav-icon">◎</span>Onboarding<span id="setup-indicator" class="nav-dot"></span></button>
+      <button class="nav-item" data-tab="scenarios" aria-selected="false"><span class="nav-icon">▦</span>Scenarios</button>
+      <button class="nav-item" data-tab="receipts" aria-selected="false"><span class="nav-icon">≋</span>Receipts</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="local-chip"><span class="dot"></span>LOCAL BY DESIGN</div>
+      <p>One recipient. One outbox.<br>Evidence before interruption.</p>
+      <div class="version">SDK 1.0 · protocol 1.0</div>
+    </div>
+  </aside>
+  <main>
+    <header class="topline">
+      <span class="breadcrumb">WORKSPACE <span>/</span> <strong id="breadcrumb">Mission control</strong></span>
+      <div class="top-actions"><span id="connection" class="status-chip neutral">Checking runtime</span><button id="refresh" class="icon-button" title="Refresh actual diagnostics" aria-label="Refresh actual diagnostics">↻</button></div>
+    </header>
+    <div id="banner" class="banner" role="alert" hidden></div>
+    <div id="operation" class="operation" role="status" hidden><span class="spinner"></span><span id="operation-text">Working locally…</span></div>
+
+    <section id="view-mission" class="view" aria-labelledby="mission-heading">
+      <div class="page-heading"><div><div class="eyebrow">YOUR ATTENTION, PROTECTED</div><h1 id="mission-heading">A quieter way to stay ahead.</h1><p>Useful findings become accountable messages. Everything else stays quiet.</p></div><button id="preview-all" class="button primary">Preview scenarios <span>↗</span></button></div>
+      <div class="metrics">
+        <article class="metric"><div class="metric-label">CANONICAL QUEUE <span>↗</span></div><strong id="metric-queue">—</strong><p>Pending in the shared outbox</p></article>
+        <article class="metric"><div class="metric-label">ENABLED SCENARIOS <span>◈</span></div><strong id="metric-scenarios">—</strong><p>Only explicitly configured producers</p></article>
+        <article class="metric"><div class="metric-label">DAILY BUDGET <span>◷</span></div><strong id="metric-budget">—</strong><p id="metric-quiet">Policy has not been loaded</p></article>
+        <article class="metric"><div class="metric-label">RECEIPT INTEGRITY <span>◇</span></div><strong id="metric-ledger" class="metric-word">—</strong><p id="metric-frames">No claim without verification</p></article>
+      </div>
+      <article class="panel pipeline">
+        <div class="panel-heading"><div><h2>Many perspectives. One pipeline.</h2><p>Every producer takes the same route. No parallel senders.</p></div><span class="tag">LOCAL / v1.0</span></div>
+        <div class="pipeline-stages">
+          <div><span class="stage-icon">▱</span><strong>Explicit sources</strong><small>Your configured evidence</small></div>
+          <span class="connector">→</span>
+          <div><span class="stage-icon">◇</span><strong>Proposals</strong><small>Versioned, validated JSON</small></div>
+          <span class="connector">→</span>
+          <div><span class="stage-icon accent">◎</span><strong>Shared gate</strong><small>Dedupe · budget · quiet hours</small></div>
+          <span class="connector">→</span>
+          <div><span class="stage-icon">↗</span><strong>Canonical outbox</strong><small id="pipeline-mode">Not yet configured</small></div>
+          <span class="connector">→</span>
+          <div><span class="stage-icon">≋</span><strong>Honest receipts</strong><small>Queued is not delivered</small></div>
+        </div>
+      </article>
+      <div class="dashboard-grid">
+        <article class="panel"><div class="panel-heading"><div><h2>Delivery posture</h2><p>Actual runtime status, not a green light by assumption.</p></div><span class="small-orbit">◎</span></div><dl class="status-list" id="posture"></dl><button class="text-button" data-go="onboarding">Review onboarding and permissions →</button></article>
+        <article class="panel"><div class="panel-heading"><div><h2>Latest decisions</h2><p>Suppression is a useful result too.</p></div><button class="text-button" data-go="receipts">All receipts →</button></div><div id="latest-receipts" class="compact-receipts"></div></article>
+      </div>
+      <div class="trust-note"><span>◇</span><p>No network listener. No telemetry. No private evidence in the application bundle.<br><strong>This build is unsigned. Python 3.9+ is a separate, diagnosed requirement.</strong></p></div>
+    </section>
+
+    <section id="view-onboarding" class="view" hidden aria-labelledby="onboarding-heading">
+      <div class="page-heading"><div><div class="eyebrow">AN HONEST FIRST RUN</div><h1 id="onboarding-heading">Make this Mac ready.</h1><p>Check the actual pipeline. Grant only what sending needs. Confirm what arrived.</p></div><button class="button secondary" id="doctor">Run diagnostics</button></div>
+      <div class="onboarding-layout">
+        <div class="steps">
+          <article class="panel step"><div class="step-number">01</div><div class="step-content"><h2>Local runtime</h2><p>Python 3.9+ runs the portable, standard-library SDK. It is not bundled.</p><div id="python-summary" class="inline-status">Checking Python…</div><button class="text-button" data-help="python">Python installation guide ↗</button></div></article>
+          <article class="panel step"><div class="step-number">02</div><div class="step-content"><h2>Choose the canonical pipeline</h2><p id="pipeline-guidance">Looking for an existing Storykeeper service…</p>
+            <div id="setup-form">
+              <label for="transport-mode">Pipeline</label><select id="transport-mode"><option value="existing">Reuse detected service</option><option value="portable">New Mac · portable canonical core</option></select>
+              <div id="recipient-field" hidden><label for="recipient">Your iMessage recipient</label><input id="recipient" type="password" autocomplete="off" maxlength="254" placeholder="+international number or email"><small>Saved privately, never returned to this page. No message is sent during setup.</small></div>
+              <button id="configure" class="button primary">Configure pipeline</button>
+            </div>
+            <div id="configured-summary" hidden class="configured-summary"></div>
+          </div></article>
+          <article class="panel step"><div class="step-number">03</div><div class="step-content"><h2>Sign in. Allow Automation.</h2><p>Open Messages and sign in to iMessage. The actual sending context needs permission to control Messages. A background job may be unable to display the prompt.</p><div class="button-row"><button class="button secondary" data-help="messages">Open Messages</button><button class="button secondary" data-help="automation">Automation settings</button></div><div class="callout"><strong>Full Disk Access is not required to send.</strong><br>Additional delivery evidence may need separate access. We do not request it, reset privacy databases, or bypass macOS consent.</div></div></article>
+          <article class="panel step"><div class="step-number">04</div><div class="step-content"><h2>Request a real self-test</h2><p>One clearly labeled onboarding message, only when you choose. Existing devices use the installed drainer; a new Mac uses the same canonical outbox core. Budget and quiet hours still apply.</p><button id="self-test" class="button primary">Request one self-test ↗</button><div id="test-result" class="callout" hidden></div><p class="muted small">After checking the recipient device, use “I received this” on its receipt. This records <strong>user-confirmed</strong>, never fabricated delivery proof.</p></div></article>
+        </div>
+        <aside class="diagnostics-column">
+          <article class="panel"><div class="panel-heading"><h2>Readiness checks</h2><span class="tag">LIVE</span></div><div id="checks" class="checks"></div></article>
+          <article class="panel"><h2>Private state</h2><p>Your runtime is separate from application code and releases.</p><code id="state-path">Not configured</code><button class="text-button" data-help="data">Open app-data directory ↗</button></article>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-scenarios" class="view" hidden aria-labelledby="scenarios-heading">
+      <div class="page-heading"><div><div class="eyebrow">PERSPECTIVES, NOT PARALLEL SENDERS</div><h1 id="scenarios-heading">Scenarios with a standard.</h1><p>Dry-run first. No evidence means no message. Each module uses the same SDK.</p></div><button id="queue-all" class="button primary">Evaluate enabled + queue ↗</button></div>
+      <div class="callout subtle"><strong>Source configuration is explicit.</strong> Modules receive only your configured source object and private artifact directory. Import a private source JSON from your own device; never use synthetic examples as real findings. <button class="text-button" id="import-sources">Import source configuration…</button><span id="sources-summary"></span></div>
+      <div id="scenario-grid" class="scenario-grid"></div>
+      <article class="panel automation-panel">
+        <div class="panel-heading"><div><h2>Consent and continuity</h2><p>No silent startup jobs. Scheduling is optional, scoped, and reversible.</p></div><span id="schedule-badge" class="tag">OFF</span></div>
+        <div class="setting-row"><div><strong>Allow real queue submissions</strong><p>Ready proposals still pass evidence, permanent dedupe, budget, and quiet-hours checks.</p></div><label class="switch"><input type="checkbox" id="send-enabled" aria-label="Allow real queue submissions"><span></span></label></div>
+        <div class="setting-row"><div><strong>Run every five minutes while this app is open</strong><p>Enabled scenarios only. Paused if the persistent Launchpad schedule is installed.</p></div><label class="switch"><input type="checkbox" id="app-schedule" aria-label="Run while the app is open"><span></span></label></div>
+        <div class="setting-row"><div><strong>Open Launchpad at login</strong><p>Installed macOS application only. This does not itself enable sending.</p></div><label class="switch"><input type="checkbox" id="login-startup" aria-label="Open at login"><span></span></label></div>
+        <div class="setting-row"><div><strong>Independent local LaunchAgent</strong><p>Optional: keep the bounded producer running without the app. Existing-device mode never installs another outbox drainer.</p><small id="schedule-state">Not installed</small></div><div class="button-row"><button id="install-schedule" class="button secondary">Install schedule…</button><button id="remove-schedule" class="button secondary">Remove</button></div></div>
+      </article>
+    </section>
+
+    <section id="view-receipts" class="view" hidden aria-labelledby="receipts-heading">
+      <div class="page-heading"><div><div class="eyebrow">PROOF, NOT ASSUMPTIONS</div><h1 id="receipts-heading">Every decision leaves a receipt.</h1><p>A tamper-evident local chain keeps attempts, suppression, and evidence separate.</p></div><button id="verify-chain" class="button secondary">Verify receipt chain</button></div>
+      <div class="receipt-key"><span class="tag queued">Queued</span><span>≠</span><span class="tag sent_unverified">Sent, unverified</span><span>≠</span><span class="tag delivered">Delivered with evidence</span><span class="tag user_confirmed">Human-confirmed is separate</span></div>
+      <div class="filters" aria-label="Filter receipts">
+        <button class="filter active" data-filter="all">All</button><button class="filter" data-filter="dry_run">Previews</button><button class="filter" data-filter="queued">Queued</button><button class="filter" data-filter="sent_unverified">Unverified</button><button class="filter" data-filter="user_confirmed">Confirmed</button><button class="filter" data-filter="suppressed">Suppressed</button><button class="filter" data-filter="error">Needs attention</button>
+      </div>
+      <div id="receipts-list" class="receipts-list"></div>
+      <p class="muted small">Reference-derived RAPP/1 hashes and a durable head verify local integrity. These unsigned frames are not a full RAPP conformance claim, nor proof that an external recipient read a message.</p>
+    </section>
+    <footer><span>RAPP iMessage Launchpad</span><span>Private on your device · public-safe by design</span></footer>
+  </main>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

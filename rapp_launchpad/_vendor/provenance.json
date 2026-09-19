@@ -1,0 +1,14 @@
+{
+  "upstream": "https://github.com/kody-w/rapp-sentinel",
+  "revision": "a69a4af55f6e50a1f22da5b08e7e848b0148ca94",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Kody Wildfeuer",
+  "modifications": "None. Canonical transport and RAPP reference files are byte-for-byte copies. Launchpad ledger separately adapts the alert_ledger pattern.",
+  "sha256": {
+    "canonical/outbox.py": "70bfea063c02e3f7ce1189feb42441820001edbad9133694998331e30e22583b",
+    "canonical/paths.py": "06c1ba9cf5bbece3bfec3ae6ea6a27cdf506455a1e52c550eb2e2035d46806ce",
+    "canonical/filelock.py": "53d4ebd7e577fa8bd98dbe1a035dd53490989e9ece541bfbfb827df1f0552049",
+    "rapp.py": "c945ee85f01af5cd374490b40721d07f2aca7c8bd6d209e0d2933420f55db284",
+    "LICENSE": "fca150ce338dbcf5a0e3fd0b5446c4674556b1a4432425105b9c01c661cd9a72"
+  }
+}

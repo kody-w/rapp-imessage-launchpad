@@ -1,0 +1,28 @@
+name: Verify public-safe Launchpad
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Project-local build storage
+        run: |
+          mkdir -p .build-cache
+          echo "TMPDIR=$PWD/.build-cache" >> "$GITHUB_ENV"
+          echo "ELECTRON_CACHE=$PWD/.build-cache/electron" >> "$GITHUB_ENV"
+      - run: npm ci --no-audit --no-fund
+      - run: python3 -m unittest discover -s tests -p 'test_scenario_*.py' -v
+      - run: python3 -m unittest discover -s tests/python -v
+      - run: npm test
+      - run: npm run lint
+      - run: npm run smoke

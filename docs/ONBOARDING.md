@@ -20,6 +20,47 @@ mode refuses Launchpad `drain`; keep using the canonical installed drainer.
 An onboarding test is only queued and follows that drainer's existing cadence.
 If it is not loaded, the app says so instead of silently installing one.
 
+## Shared self-chat for AI updates
+
+One iMessage self-chat can serve as an ongoing activity feed across your AIs.
+Use short attribution such as `[Copilot / Launchpad]` in producer titles so
+progress, results, and requests for decisions have an identifiable source.
+Useful updates need not be emergencies; suppress stale repeats rather than
+assuming every nonurgent update is unwanted.
+
+**Reusing a sender does not establish the intended destination.** An existing
+Storykeeper recipient may point to a different conversation from your
+self-chat. Verify the exact iMessage address shown in the intended thread
+before accepting a test as successful.
+
+To persist the route on an existing device:
+
+1. Read Launchpad's private app configuration to identify its canonical `home`.
+   The detected Storykeeper home is normally `~/.storykeeper/home`.
+2. With the operator's approval, set `notify_handle` in that home's private
+   `config.json` to the intended self-chat iMessage address. Preserve all other
+   settings and existing file permissions; notification must remain enabled.
+   Do not put the address in source code, a proposal, or a committed example.
+3. This changes the shared default, including other producers that read that
+   setting. Launchpad reads it for each enqueue, so a sender reinstall or a
+   second drainer is unnecessary. Already queued messages retain their original
+   destinations; unrelated AIs with separate configuration are not redirected.
+4. Request a labeled self-test and inspect that exact conversation. A matching
+   outgoing message and incoming self-chat copy establish the local round trip.
+   A conversation-list preview elsewhere or a successful sender exit does not.
+   Delivery to other devices remains a separate observation.
+
+For a new Mac, enter the intended self-chat address during portable onboarding
+instead. In either mode the destination stays in private runtime configuration,
+not this repository. Future operators should resolve that configuration rather
+than hardcode an address or reuse an old one-off test override.
+
+Saving the destination does **not** change budgets, quiet hours, consent, or
+deduplication. The default daily limit is six, and even explicit self-tests can
+be suppressed after it is exhausted. An activity-feed deployment should choose
+its policy explicitly; do not silently bypass the gate or claim a suppressed
+test was sent.
+
 ## New Mac
 
 The portable sender is the same byte-for-byte MIT outbox core recorded in

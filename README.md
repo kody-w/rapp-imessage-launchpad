@@ -2,6 +2,11 @@
 
 **Many evidence producers. One accountable iMessage pipeline.**
 
+Use one self-chat as a shared activity feed for your AIs, with clearly
+attributed progress, results, and decisions rather than only emergency alerts.
+See [shared self-chat setup](docs/ONBOARDING.md#shared-self-chat-for-ai-updates)
+to persist the destination without committing private account details.
+
 A local Electron mission control, a versioned proposal/receipt protocol, and a
 standard-library Python SDK. Scenarios produce evidence-backed proposals;
 a shared gate decides whether they deserve an interruption; the **existing

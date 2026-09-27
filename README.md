@@ -1,5 +1,9 @@
 # RAPP iMessage Launchpad
 
+<!-- rapp1:network-header:start -->
+[![RAPP/1](https://kody-w.github.io/rapp-hive-public/portfolio/badges/rapp-imessage-launchpad.svg)](https://github.com/kody-w/rapp-hive-public/blob/main/portfolio/repos/rapp-imessage-launchpad.md) · **New to RAPP?** [Start here: get your Brainstem →](https://github.com/kody-w/rapp-installer#start-here)
+<!-- rapp1:network-header:end -->
+
 **Many evidence producers. One accountable iMessage pipeline.**
 
 Use one self-chat as a shared activity feed for your AIs, with clearly
